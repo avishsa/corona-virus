@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Country = require('../models/Country');
 const Report = require('../models/Report');
+const mongoose = require('mongoose');
 
 const parser = async (filename)=>{
     await Report.deleteMany();
@@ -35,12 +36,46 @@ const parser = async (filename)=>{
     }
 };
 const countries =async ()=>{
-  countryList = await Country.find({});
-  countryList= countryList.map(c=>c.location);  
-  return countryList;
+    return (await Country.find({}))
+  .map(c=>{return {"location":c.location,"id":c._id}});  
+   
 }
+const lastdays = async(countryId)=>{
+    const today = new Date();
+    let earliest= today;
+    earliest.setDate(today.getDate() -15);
+    console.log(today,earliest);
+    const query = {
+        //'country': new mongoose.Types.ObjectId(countryId),
+    'date' :{
+        $gte: earliest, 
+        $lt:  today
+    }
+};
+    return (await Report.find(/*{total_cases:5}*/query  ));
+    
+    ;
+
+}
+const top10 =async(countryId)=>{
+    const today = new Date();
+    let earliest= today;
+    earliest.setDate(today.getDate() -1);
+    console.log(today,earliest);
+    const query = { 'date' :{
+        $gte: earliest, 
+        $lt:  today
+    }
+};
+    return (await Report.find(query).sort('total_cases'));
+    
+    
+
+};
 const Manager={
     parser:parser,
-    countries:countries
+    countries:countries,
+    lastdays:lastdays,
+    top10:top10
 };
 module.exports=Manager;

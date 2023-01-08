@@ -24,10 +24,12 @@ app.get('/seed', async(req,res)=>{
 
 });
 app.get('/countries',async(req,res)=>{
-
     res.status(200).json(await Manager.countries());
 })
-
+app.get('/lastdays/:countryId',async(req,res)=>{
+   console.log(req.params["countryId"])
+   res.status(200).json(await Manager.lastdays(req.params["countryId"]));
+})
 module.exports=app;
 
 
