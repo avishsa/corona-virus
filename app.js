@@ -9,6 +9,11 @@ const fileName= './db/owid-covid-data.json';
 app.get('/',(req,res)=>{        
       res.status(200).json({data:'hello world'});
 });
+app.get('/seedISO',async (req,res)=>{    
+    res.status(200).json(await Manager.isocode())
+         
+    
+});
 app.get('/seed', async(req,res)=>{      
     try{
        await Manager.parse(fileName)

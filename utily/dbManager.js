@@ -2,7 +2,22 @@ const fs = require('fs');
 const Country = require('../models/Country');
 const Report = require('../models/Report');
 const mongoose = require('mongoose');
+const ISOCode = require('../models/ISOCodes');
 
+const isocode = async ()=>{
+    await ISOCode.deleteMany();
+    const raw_data=fs.readFileSync("./db/countries.json");
+    const db = JSON.parse(raw_data); 
+    for (const record of db) {  
+        const {code, name,eu} = record;
+        await ISOCode.create({
+            code:code,
+            name:name,
+            eu:eu
+        });
+    }
+    return {"message":"success"};
+}
 const parser = async (filename)=>{
     await Report.deleteMany();
     await Country.deleteMany();
@@ -16,6 +31,8 @@ const parser = async (filename)=>{
     for (const [iso_code, record] of Object.entries(db)) {        
         const location = record["location"];  
         const record_data = record["data"];
+        const countrycode = await ISOCode.find({"code":iso_code});
+        if(!countrycode) continue;
         const country = await Country.create({
             location:location
         });      
@@ -92,7 +109,7 @@ const top10 =async()=>{
         //console.log(t.country[0].location);
         return {"date":t.max,
         "total_cases":t._id.total_cases,
-        "country":t.country[0].location
+        "country":t.country[0].location,        
     };
     });
     
@@ -100,6 +117,7 @@ const top10 =async()=>{
 };
 const Manager={
     parser:parser,
+    isocode:isocode,
     countries:countries,
     lastdays:lastdays,
     top10:top10
