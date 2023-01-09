@@ -55,9 +55,9 @@ const lastdays = async(countryId)=>{
     return (await Report.find(query)).map(r=>r.new_cases);   
    
 }
-const top10 =async(countryId)=>{
+const top10 =async()=>{
     const today = new Date();
-    let earliest= today;
+    let earliest= new Date();
     earliest.setDate(today.getDate() -1);
     console.log(today,earliest);
     const query = { 'date' :{
@@ -65,8 +65,36 @@ const top10 =async(countryId)=>{
         $lt:  today
     }
 };
-    return (await Report.find(query).sort('total_cases'));
-    
+    const report_dates =  (await 
+        Report.aggregate([{
+            $group:{
+                _id:{country:"$country",total_cases:"$total_cases"},
+                max: { $max : "$date" },                
+            }
+            
+        },
+        { $lookup: {
+            from: "countries",
+            localField: "_id.country",
+            foreignField: "_id",
+            as: "country"
+         }} 
+        ])           
+            .sort({
+                'max':-1,"_id.total_cases":-1
+            })
+            .limit(10)
+            
+            )
+        ;  
+    const top10 = report_dates;
+    return top10.map(t=>{
+        //console.log(t.country[0].location);
+        return {"date":t.max,
+        "total_cases":t._id.total_cases,
+        "country":t.country[0].location
+    };
+    });
     
 
 };
