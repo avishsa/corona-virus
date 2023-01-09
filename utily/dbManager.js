@@ -42,20 +42,18 @@ const countries =async ()=>{
 }
 const lastdays = async(countryId)=>{
     const today = new Date();
-    let earliest= today;
+    let earliest= new Date();
     earliest.setDate(today.getDate() -15);
-    console.log(today,earliest);
+    
     const query = {
-        //'country': new mongoose.Types.ObjectId(countryId),
+        'country': new mongoose.Types.ObjectId(countryId),
     'date' :{
         $gte: earliest, 
         $lt:  today
     }
 };
-    return (await Report.find(/*{total_cases:5}*/query  ));
-    
-    ;
-
+    return (await Report.find(query)).map(r=>r.new_cases);   
+   
 }
 const top10 =async(countryId)=>{
     const today = new Date();
