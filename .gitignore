@@ -1,2 +1,4 @@
 node_modules
-db/owid-covid-data.json
+db/owid-covid-data.json.json
+db/countries.json.json
+
