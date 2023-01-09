@@ -29,7 +29,10 @@ app.get('/countries',async(req,res)=>{
 app.get('/lastdays/:countryId',async(req,res)=>{
    console.log(req.params["countryId"])
    res.status(200).json(await Manager.lastdays(req.params["countryId"]));
-})
+});
+app.get('/top10',async(req,res)=>{    
+    res.status(200).json(await Manager.top10());
+ });
 module.exports=app;
 
 
