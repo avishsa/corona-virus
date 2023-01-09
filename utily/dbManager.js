@@ -87,7 +87,7 @@ const top10 =async()=>{
     const report_dates =  (await 
         Report.aggregate([{
             $group:{
-                _id:{country:"$country",total_cases:"$total_cases"},
+                _id:{country:"$country",total_cases:"$total_cases",total_deaths:"$total_deaths"},
                 max: { $max : "$date" },                
             }
             
@@ -111,6 +111,7 @@ const top10 =async()=>{
         //console.log(t.country[0].location);
         return {"date":t.max,
         "total_cases":t._id.total_cases,
+        "total_deaths":t._id.total_deaths,
         "country":t.country[0].location, 
               
     };

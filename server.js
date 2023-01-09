@@ -2,7 +2,7 @@ const http = require('http');
 const app= require("./app");
 const mongoose=require('mongoose');
 const secretdb= "mongodb+srv://avishag:pbpUp57g3NW8aY0w@avishag1.6tqr7.mongodb.net/corona_virus?retryWrites=true&w=majority";
-const port = 3000;
+const port = 5000;
 const server = http.createServer(app);
 const options = {
     useNewUrlParser: true,    
