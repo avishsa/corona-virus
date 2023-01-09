@@ -71,7 +71,7 @@ const lastdays = async(countryId)=>{
         $lt:  today
     }
 };
-    return (await Report.find(query)).map(r=>r.new_cases);   
+    return (await Report.find(query)).map(r=>{return {"new_cases":r.new_cases,"date":r.date}});   
    
 }
 const top10 =async()=>{
