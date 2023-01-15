@@ -2,7 +2,7 @@
 
 const utils = require( "../utils" );
 const register = async ( { sql, getConnection } ) => {
-    
+    const sqlQueries = await utils.loadSqlQueries("reports");
    const getlastdays = async (countryId)=>{
     const today = new Date();
     let earliest= new Date();
@@ -26,8 +26,7 @@ const getTop10 = async ({ sql, getConnection })=>{
 };
 const deleteReport = async()=>{
     try{
-    const pool = await getConnection();
-    console.log(pool);
+    const pool = await getConnection();    
     const request = await pool.request();      
     return request.query( sqlQueries.deleteReport );
     }

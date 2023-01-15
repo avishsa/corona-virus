@@ -26,18 +26,16 @@ const client = async ( server, config ) => {
    };
 
    const getConnection = async () => {
-    console.log("get connection")
+    
        try {
            if ( pool ) {
                // has the connection pool already been created?
-               // if so, return the existing pool
-              
+               // if so, return the existing pool              
                return pool;
            }
-           // create a new connection pool
-           console.log("connecting to db")
-           pool = await sql.connect( config );
-           console.log("!!!!",pool)
+           // create a new connection pool                     
+           pool = await sql.connect( config );           
+           
            // catch any connection errors and close the pool
            pool.on( "error", async err => {
                server.log( [ "error", "data" ], "connection pool error" );
@@ -49,7 +47,6 @@ const client = async ( server, config ) => {
            // error connecting to SQL Server
            server.log( [ "error", "data" ], "error connecting to sql server" );
            server.log( [ "error", "data" ], err );
-           console.log(err);
            pool = null;
        }
    };

@@ -14,7 +14,7 @@ module.exports.register = async server => {
             handler: async request => {
                 try {
                     // get the sql client registered as a plugin
-                    console.log(request.server.plugins);
+                    
                     const db = request.server.plugins.sql.client;                
                     
                     //delete records
@@ -31,15 +31,15 @@ module.exports.register = async server => {
                     const countries_data= JSON.parse(countries_file);
                     const records_file = fs.readFileSync(recordsfile_name);
                     const records_data= JSON.parse(records_file);
-                    console.log("start reading",);
+                    
                     let valid_countries = [];
                     
                     
                     for (const [iso_code, record] of Object.entries(records_data)) { 
-                        //console.log(iso_code);
+                        
                         if (countries_data.filter(c=>c.code===iso_code).length===0)
                             continue;
-                        console.log(iso_code);
+                        
                         valid_countries.push(iso_code);
                         //await db.countries.insert({isocode:params["countryId"],location:""});
                         /*const location = record["location"];  
