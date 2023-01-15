@@ -23,10 +23,23 @@ const getTop10 = async ({ sql, getConnection })=>{
    // create a new request
    const request = await cnx.request(); 
     return request.query( sqlQueries.getTop10 );
-}
+};
+const deleteReport = async()=>{
+    try{
+    const pool = await getConnection();
+    console.log(pool);
+    const request = await pool.request();      
+    return request.query( sqlQueries.deleteReport );
+    }
+    catch(err){
+        console.log(err);
+        return {...err,"err":true};
+    }
+};
 return {
     getlastdays,
-    getTop10
+    getTop10,
+    deleteReport
 };
 }
 module.exports = { register };

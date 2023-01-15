@@ -3,40 +3,59 @@
 const countries = require( "./countries" );
 const reports = require( "./reports" );
 const fs = require('fs');
+const JSONStream = require('JSONStream');
 module.exports.register = async server => {
    await countries.register( server );
    await reports.register(server);
    server.route({
-        method: "POST",
+        method: "GET",
         path: "/api/seed",
         config: {
             handler: async request => {
                 try {
                     // get the sql client registered as a plugin
+                    console.log(request.server.plugins);
                     const db = request.server.plugins.sql.client;                
-                    var params = request.query
+                    
                     //delete records
-                    await db.reports.deleteReport();
+                    const delete_res = await db.reports.deleteReport();
+                    if(delete_res['err']) return delete_res;
                     //delete country
                     await db.countries.deleteCountry();
-                    const recordsfile="";
-                    const countriesfile="";
+                    const countriesfile_name ="./db/countries.json";
+                    
+                    const recordsfile_name="./db/owid-covid-data.json";
                     //seeding
-                    const raw_data_reports=JSON.parse(fs.readFileSync(recordsfile));
-                    const raw_data_countries = JSON.parse(fs.readFileSync(countriesfile));
-                    for (const [iso_code, record] of Object.entries(raw_data_reports)) { 
-                        const location = record["location"];  
+                    //const raw_data_reports=JSON.parse(fs.readFileSync(recordsfile));
+                    const countries_file=fs.readFileSync(countriesfile_name);
+                    const countries_data= JSON.parse(countries_file);
+                    const records_file = fs.readFileSync(recordsfile_name);
+                    const records_data= JSON.parse(records_file);
+                    console.log("start reading",);
+                    let valid_countries = [];
+                    
+                    
+                    for (const [iso_code, record] of Object.entries(records_data)) { 
+                        //console.log(iso_code);
+                        if (countries_data.filter(c=>c.code===iso_code).length===0)
+                            continue;
+                        console.log(iso_code);
+                        valid_countries.push(iso_code);
+                        //await db.countries.insert({isocode:params["countryId"],location:""});
+                        /*const location = record["location"];  
                         const record_data = record["data"];
                         const countrycode = await ISOCode.findOne({"code":iso_code});
                          // insert country
-                        await db.reports.insert(params["countryId"]);
+                        await db.countries.insert(params["countryId"]);
                         // insert records                    
                         await db.reports.insert(params["countryId"]);   
-                        // return the recordset object
+                        // return the recordset object*/
                     }
+                    return {msg:'sucessfull seeding'};
                    
                 } catch ( err ) {
                     console.log( err );
+                    return {err}
                 }
             }
         }

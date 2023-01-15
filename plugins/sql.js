@@ -15,6 +15,6 @@ module.exports = {
        const client = await dataClient( server, config );
 
        // "expose" the client so it is available everywhere "server" is available
-       //server.expose( "client", client );
+       server.expose( "client", client );
    }
 };
