@@ -27,7 +27,7 @@ const register = async ( { sql, getConnection } ) => {
     const pool = await getConnection();
     const request = await pool.request();
     request.input( "location", sql.VarChar( 50 ), location );
-    request.input( "iso_code", sql.VarChar( 50 ), iso_code );
+    request.input( "iso_code", sql.VarChar( 3 ), iso_code );
     return request.query( sqlQueries.addCountry );
    };
    const deleteCountry = async()=>{

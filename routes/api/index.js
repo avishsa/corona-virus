@@ -32,26 +32,36 @@ module.exports.register = async server => {
                     const records_file = fs.readFileSync(recordsfile_name);
                     const records_data= JSON.parse(records_file);
                     
-                    let valid_countries = [];
+                    let reports_records =[];
                     
                     
                     for (const [iso_code, record] of Object.entries(records_data)) { 
                         
                         if (countries_data.filter(c=>c.code===iso_code).length===0)
-                            continue;
+                            continue;                       
+                        await db.countries.addCountry({iso_code:iso_code,location:record["location"]});
                         
-                        valid_countries.push(iso_code);
-                        //await db.countries.insert({isocode:params["countryId"],location:""});
-                        /*const location = record["location"];  
-                        const record_data = record["data"];
-                        const countrycode = await ISOCode.findOne({"code":iso_code});
-                         // insert country
-                        await db.countries.insert(params["countryId"]);
-                        // insert records                    
-                        await db.reports.insert(params["countryId"]);   
-                        // return the recordset object*/
+                    const record_data = record["data"];
+                    
+                    for (let i=0;i<record_data.length ;i++) {                         
+                        reports_records.push(
+                            {
+                                reportDate:record_data[i]["date"],
+                                new_cases:record_data[i]["new_cases"]?? null,
+                                total_cases:record_data[i]["total_cases"]?? null,
+                                total_deaths:record_data[i]["total_deaths"]?? null,
+                                ISOCODE:iso_code
+                            }
+                        );                                                    
+
+                    }             
+                    
+                       
                     }
-                    return {msg:'sucessfull seeding'};
+                    
+                    
+                     db.reports.addReports(reports_records);
+                    return {msg:'sucessfull seeding wait a few minutes'};//), data:a};
                    
                 } catch ( err ) {
                     console.log( err );

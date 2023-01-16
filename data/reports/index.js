@@ -17,7 +17,7 @@ const register = async ( { sql, getConnection } ) => {
    // return the executed query
    return request.query( sqlQueries.getlastdays );
 };
-const getTop10 = async ({ sql, getConnection })=>{
+const getTop10 = async ()=>{
     // get a connection to SQL Server
    const cnx = await getConnection();
    // create a new request
@@ -35,10 +35,29 @@ const deleteReport = async()=>{
         return {...err,"err":true};
     }
 };
+const addReport = async({ISOCODE,reportDate,total_cases,new_cases,total_deaths})=>{
+    
+    const pool = await getConnection();
+    const request = await pool.request();
+    request.input( "ISOCODE", sql.VarChar( 3 ), ISOCODE );
+    request.input( "reportDate", sql.Date, reportDate ); 
+    request.input( "total_cases", sql.Int, total_cases??0 );   
+    request.input( "new_cases", sql.Int, new_cases ?? 0 );   
+    request.input( "total_deaths", sql.Int, total_deaths );
+    return request.query( sqlQueries.addReport);
+  
+   };
+   const addReports= async(reports)=>{ 
+    console.log(reports.length)
+    reports.forEach(r=> addReport(r));
+    return 'sucess';
+   };
 return {
     getlastdays,
     getTop10,
-    deleteReport
+    deleteReport,
+    addReport,
+    addReports
 };
 }
 module.exports = { register };

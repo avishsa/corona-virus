@@ -6,7 +6,7 @@ INSERT INTO [dbo].[countries]
 VALUES
 (
     @location,
-    @isocode
+    @iso_code
 )
 
 ;

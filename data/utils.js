@@ -16,6 +16,7 @@ const loadSqlQueries = async folderName => {
 
    // loop over the files and read in their contents
    const queries = {};
+  
    for ( let i = 0; i < sqlFiles.length; i++ ) {
        const query = fse.readFileSync( join( filePath, sqlFiles[ i ] ), { encoding: "UTF-8" } );
        queries[ sqlFiles[ i ].replace( ".sql", "" ) ] = query;
