@@ -26,7 +26,7 @@ module.exports.register = async server => {
                     
                     const recordsfile_name="./db/owid-covid-data.json";
                     //seeding
-                    //const raw_data_reports=JSON.parse(fs.readFileSync(recordsfile));
+                    
                     const countries_file=fs.readFileSync(countriesfile_name);
                     const countries_data= JSON.parse(countries_file);
                     const records_file = fs.readFileSync(recordsfile_name);
@@ -43,16 +43,14 @@ module.exports.register = async server => {
                         
                     const record_data = record["data"];
                     
-                    for (let i=0;i<record_data.length ;i++) {                         
-                        reports_records.push(
-                            {
-                                reportDate:record_data[i]["date"],
-                                new_cases:record_data[i]["new_cases"]?? null,
-                                total_cases:record_data[i]["total_cases"]?? null,
-                                total_deaths:record_data[i]["total_deaths"]?? null,
-                                ISOCODE:iso_code
-                            }
-                        );                                                    
+                    for (let i=0;i<record_data.length ;i++) {                                                 
+                        reports_records.push([
+                            iso_code,
+                           record_data[i]["date"],
+                            record_data[i]["total_cases"]??null,
+                            record_data[i]["new_cases"]?? null,
+                           record_data[i]["total_deaths"]?? null 
+                        ]);                                             
 
                     }             
                     
@@ -60,8 +58,8 @@ module.exports.register = async server => {
                     }
                     
                     
-                     db.reports.addReports(reports_records);
-                    return {msg:'sucessfull seeding wait a few minutes'};//), data:a};
+                    const results= await db.reports.addReports(reports_records);
+                    return {results,msg:'sucessfull seeding wait a few minutes'};//), data:a};
                    
                 } catch ( err ) {
                     console.log( err );

@@ -48,9 +48,30 @@ const addReport = async({ISOCODE,reportDate,total_cases,new_cases,total_deaths})
   
    };
    const addReports= async(reports)=>{ 
-    console.log(reports.length)
+
+    const _request = new sql.Request();
+		
+		
+   /* console.log(reports.length)
     reports.forEach(r=> addReport(r));
-    return 'sucess';
+    return 'sucess';*/
+    const table = new sql.Table('reports');
+   
+    
+    table.create = false;
+    //table.columns.add( "ID", sql.Int, {nullable: false} );
+    table.columns.add( "ISOCODE", sql.VarChar(3),{nullable: false} );
+    table.columns.add( "reportDate", sql.Date,{nullable: false}); 
+    table.columns.add( "total_cases", sql.Int ,{nullable: true});   
+    table.columns.add( "new_cases", sql.Int ,{nullable: true});   
+    table.columns.add( "total_deaths", sql.Int ,{nullable: true});
+    reports.forEach(r=> {        
+        table.rows.add.apply(table.rows,r);
+    });    
+    const pool = await getConnection(); 
+    const request = pool.request();    
+    const results = await request.bulk(table);
+    console.log(`rows affected ${results.rowsAffected}`);
    };
 return {
     getlastdays,
