@@ -14,6 +14,7 @@ app.get('/seedISO',async (req,res)=>{
          
     
 });
+//done
 app.get('/seed', async(req,res)=>{      
     try{
        await Manager.parse(fileName)
@@ -28,6 +29,7 @@ app.get('/seed', async(req,res)=>{
     res.status(200).json({message:'seeding completed'});           
 
 });
+//done
 app.get('/countries',async(req,res)=>{
     res.header("Access-Control-Allow-Origin", "*");
     res.status(200).json(await Manager.countries());

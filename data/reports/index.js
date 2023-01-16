@@ -11,7 +11,7 @@ const register = async ( { sql, getConnection } ) => {
    const cnx = await getConnection();
    // create a new request
    const request = await cnx.request(); 
-   request.input( "countryId", sql.VarChar( 3 ), countryId );  
+   request.input( "isocode", sql.VarChar( 3 ), countryId );  
    request.input( "today", sql.Date, today );  
    request.input( "earliest", sql.Date, earliest );  
    // return the executed query
@@ -19,6 +19,7 @@ const register = async ( { sql, getConnection } ) => {
 };
 const getTop10 = async ()=>{
     // get a connection to SQL Server
+    console.log('get top 10')
    const cnx = await getConnection();
    // create a new request
    const request = await cnx.request(); 

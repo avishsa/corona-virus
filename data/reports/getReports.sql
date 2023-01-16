@@ -3,7 +3,7 @@ SELECT [id],
     [ReportDate],
     [Total_cases],
     [New_cases],
-    [Total_deaths],
+    [Total_deaths]
 FROM [dbo].[reports];
 
 

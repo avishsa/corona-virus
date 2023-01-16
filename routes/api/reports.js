@@ -7,16 +7,11 @@ module.exports.register = async server => {
                 try {
                     // get the sql client registered as a plugin
                     const db = request.server.plugins.sql.client;                
-                    var params = request.query
-                    
-                    
-                    // insert records to country
-                    
-                    const res= await db.reports.getlastdays(params["countryId"]);
-    
-    
+                    var params = request.query                   
+                    // insert records to country                  
+                    const res= await db.reports.getlastdays(params["countryId"]);   
                     // return the recordset object
-                    return res.recordset;
+                    return res.recordset;                   
                 } catch ( err ) {
                     console.log( err );
                 }
@@ -34,11 +29,13 @@ module.exports.register = async server => {
                    
                     const res= await db.reports.getTop10();
     
-    
+                    
                     // return the recordset object
                     return res.recordset;
+                   // return {msg:'dsa'};
                 } catch ( err ) {
                     console.log( err );
+                    return res.err;
                 }
             }
         }
