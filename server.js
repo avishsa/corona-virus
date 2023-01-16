@@ -8,7 +8,9 @@ const app = async config => {
    const { host, port } = config;
 
    // create an instance of hapi
-   const server = Hapi.server( { host, port } );
+   const server = Hapi.server( { host, port,routes: {
+      cors: true
+  }} );
 
    // store the config for later use
    server.app.config = config;
