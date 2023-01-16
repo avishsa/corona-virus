@@ -6,3 +6,4 @@ db/owid-covid-data.json
 db/countries.json
 
 .env
+.env
