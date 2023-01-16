@@ -1,4 +1,4 @@
 SELECT [id],
     [location],
-    [iso_date]
+    [isocode]
 FROM [dbo].[countries];
